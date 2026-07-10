@@ -464,6 +464,139 @@ st.markdown("""
 .pgfooter-l{font-size:.7rem;color:var(--text3)}
 .pgfooter-chips{display:flex;gap:.4rem;flex-wrap:wrap}
 .pgfooter-chip{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:9999px;padding:.15rem .6rem;font-size:.64rem;color:var(--text3)}
+
+/* ================================================================
+   MOBILE RESPONSIVE — max 768px
+   Desktop layout is completely untouched above this block.
+   ================================================================ */
+@media (max-width: 768px) {
+
+  /* ── Hide sidebar entirely on mobile — too cramped ── */
+  [data-testid="stSidebar"] {
+    display: none !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* ── Main content fills full width ── */
+  .main .block-container {
+    padding: 0 1rem 3rem !important;
+    max-width: 100% !important;
+  }
+
+  /* ── Hero: shrink title, tighten padding ── */
+  .syn-hero {
+    padding: 1.5rem 1rem 1rem !important;
+  }
+  .syn-hero-title {
+    font-size: clamp(2rem, 10vw, 3rem) !important;
+    line-height: 1 !important;
+  }
+  .syn-hero-sub {
+    font-size: .82rem !important;
+  }
+  .syn-hero-chips {
+    gap: .4rem !important;
+  }
+  .syn-chip {
+    font-size: .62rem !important;
+    padding: .2rem .55rem !important;
+  }
+
+  /* ── Stat grid: 2 cols on mobile instead of 4 ── */
+  .syn-stat-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: .5rem !important;
+  }
+  .syn-stat .s-val {
+    font-size: 1.5rem !important;
+  }
+
+  /* ── Cards: reduce padding ── */
+  .syn-card {
+    padding: 1rem 1rem !important;
+    border-radius: 14px !important;
+  }
+
+  /* ── Input section ── */
+  .isec {
+    padding: 1rem !important;
+    border-radius: 14px !important;
+  }
+
+  /* ── Arch row: single column on mobile ── */
+  .arch-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Domain grid: single column ── */
+  .dgrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Feature row labels: shorter min-width ── */
+  .flbl { min-width: 120px !important; font-size: .68rem !important; }
+  .sclbl { min-width: 110px !important; font-size: .68rem !important; }
+
+  /* ── Timeline: tighten indent ── */
+  .tline { padding-left: 1.2rem !important; }
+
+  /* ── Verdict + category row: wrap nicely ── */
+  .vbadge { font-size: .65rem !important; padding: .22rem .65rem !important; }
+  .cbadge { font-size: .62rem !important; }
+
+  /* ── Footer: stack vertically ── */
+  .pgfooter {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: .5rem !important;
+  }
+
+  /* ── Text areas fill full width ── */
+  .stTextArea textarea {
+    font-size: .78rem !important;
+  }
+
+  /* ── Radio buttons: stack on mobile ── */
+  .stRadio > div {
+    flex-direction: column !important;
+    gap: .25rem !important;
+  }
+
+  /* ── Primary button: full width on mobile ── */
+  div[data-testid="stButton"] > button[kind="primary"] {
+    width: 100% !important;
+    padding: .75rem 1rem !important;
+  }
+
+  /* ── Reduce scan step font ── */
+  .sstep { font-size: .72rem !important; }
+
+  /* ── Scorecard cols in raw features: 2 cols ── */
+  .stColumns { gap: .4rem !important; }
+}
+
+/* ── Extra small phones (< 480px) ── */
+@media (max-width: 480px) {
+  .syn-hero-title {
+    font-size: clamp(1.7rem, 9vw, 2.4rem) !important;
+  }
+  .syn-stat-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .syn-stat .s-val {
+    font-size: 1.3rem !important;
+  }
+  .main .block-container {
+    padding: 0 .6rem 2rem !important;
+  }
+  .syn-card {
+    padding: .85rem .85rem !important;
+  }
+  .flbl { min-width: 90px !important; }
+}
 </style>""", unsafe_allow_html=True)
 
 # ===========================================================================
