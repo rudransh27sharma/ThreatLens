@@ -1,0 +1,13 @@
+[
+  "urgency_score",
+  "requests_sensitive_info",
+  "generic_greeting",
+  "link_text_mismatch",
+  "grammar_error_density",
+  "sender_domain_mismatch",
+  "uppercase_ratio",
+  "exclamation_count",
+  "url_count_in_text",
+  "keyword_density",
+  "suspicious_tld_in_body"
+]

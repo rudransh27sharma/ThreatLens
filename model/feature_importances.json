@@ -1,0 +1,15 @@
+{
+  "url_length": 0.13368988709926138,
+  "num_subdomains": 0.0774545882455641,
+  "has_ip_address": 0.055389179279052486,
+  "uses_url_shortener": 0.0696277750990335,
+  "has_https": 0.044996545704913196,
+  "count_special_chars": 0.08921588577436151,
+  "has_suspicious_keywords_in_domain": 0.04528211117575634,
+  "urgency_score": 0.22836949696034675,
+  "requests_sensitive_info": 0.16581677195239902,
+  "generic_greeting": 0.023212137262013748,
+  "link_text_mismatch": 0.036016476158810276,
+  "grammar_error_density": 0.0309291452884877,
+  "sender_domain_mismatch": 0.0
+}

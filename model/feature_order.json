@@ -1,0 +1,15 @@
+[
+  "url_length",
+  "num_subdomains",
+  "has_ip_address",
+  "uses_url_shortener",
+  "has_https",
+  "count_special_chars",
+  "has_suspicious_keywords_in_domain",
+  "urgency_score",
+  "requests_sensitive_info",
+  "generic_greeting",
+  "link_text_mismatch",
+  "grammar_error_density",
+  "sender_domain_mismatch"
+]

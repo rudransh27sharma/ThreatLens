@@ -1,0 +1,13 @@
+{
+  "urgency_score": 0.08525632300217875,
+  "requests_sensitive_info": 0.23620788467186216,
+  "generic_greeting": 0.0702208790585477,
+  "link_text_mismatch": 0.002485701077066665,
+  "grammar_error_density": 0.010014421926143706,
+  "sender_domain_mismatch": 0.03820387646256341,
+  "uppercase_ratio": 0.12697016084346874,
+  "exclamation_count": 0.001619208410620827,
+  "url_count_in_text": 0.19953281409553417,
+  "keyword_density": 0.18970926414526385,
+  "suspicious_tld_in_body": 0.03977946630675009
+}

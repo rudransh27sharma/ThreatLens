@@ -1,0 +1,24 @@
+# PhishGuard dependencies — fully local, no external API required.
+# Install with: pip install -r requirements.txt
+
+# Web framework
+fastapi==0.115.14
+uvicorn[standard]==0.34.3
+
+# Rate limiting
+slowapi==0.1.9
+
+# Frontend
+streamlit==1.46.1
+
+# ML / data
+scikit-learn==1.6.1
+pandas==2.3.1
+numpy==2.3.1
+joblib==1.5.1
+
+# Utilities
+python-dotenv==1.1.1
+pydantic==2.13.4
+requests==2.34.2
+python-whois==0.9.6

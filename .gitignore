@@ -1,0 +1,27 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment secrets — never commit this
+.env
+
+# Pytest
+.pytest_cache/
+
+# Scratch/debug scripts
+_balance_test.py
+_curve_test.py
+_prob_check.py
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

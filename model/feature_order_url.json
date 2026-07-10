@@ -1,0 +1,16 @@
+[
+  "url_length",
+  "num_subdomains",
+  "has_ip_address",
+  "uses_url_shortener",
+  "has_https",
+  "count_special_chars",
+  "has_suspicious_keywords_in_domain",
+  "has_at_symbol",
+  "path_depth",
+  "query_param_count",
+  "tld_suspicious",
+  "domain_entropy",
+  "digit_ratio_in_domain",
+  "hyphen_count_in_domain"
+]
