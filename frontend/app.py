@@ -68,6 +68,84 @@ st.set_page_config(
 # SYNAPSE CSS
 # ===========================================================================
 st.markdown("""
+<!-- Mobile sidebar toggle button + overlay — only visible on mobile via CSS -->
+<button id="mob-sidebar-toggle" aria-label="Toggle navigation" onclick="toggleMobileSidebar()">
+  <span></span>
+</button>
+<div id="mob-overlay" onclick="closeMobileSidebar()"></div>
+
+<script>
+(function(){
+  // Run immediately and also after Streamlit re-renders
+  function setupMobileSidebar() {
+    var btn     = document.getElementById('mob-sidebar-toggle');
+    var overlay = document.getElementById('mob-overlay');
+    var sidebar = document.querySelector('[data-testid="stSidebar"]');
+    if (!btn || !sidebar) return;
+
+    // Ensure sidebar starts CLOSED on mobile
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('mob-open');
+      btn.classList.remove('open');
+      if (overlay) overlay.classList.remove('active');
+    }
+  }
+
+  window.toggleMobileSidebar = function() {
+    var btn     = document.getElementById('mob-sidebar-toggle');
+    var overlay = document.getElementById('mob-overlay');
+    var sidebar = document.querySelector('[data-testid="stSidebar"]');
+    if (!sidebar) return;
+
+    var isOpen = sidebar.classList.toggle('mob-open');
+    btn.classList.toggle('open', isOpen);
+    if (overlay) overlay.classList.toggle('active', isOpen);
+  };
+
+  window.closeMobileSidebar = function() {
+    var btn     = document.getElementById('mob-sidebar-toggle');
+    var overlay = document.getElementById('mob-overlay');
+    var sidebar = document.querySelector('[data-testid="stSidebar"]');
+    if (!sidebar) return;
+    sidebar.classList.remove('mob-open');
+    if (btn) btn.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+  };
+
+  // Re-run setup whenever Streamlit re-renders the page
+  // (Streamlit re-renders DOM on every interaction which resets classes)
+  var _lastSidebarState = false;
+  setInterval(function(){
+    var sidebar = document.querySelector('[data-testid="stSidebar"]');
+    var btn     = document.getElementById('mob-sidebar-toggle');
+    if (!sidebar || !btn || window.innerWidth > 768) return;
+
+    // If sidebar lost its mob-open class due to Streamlit re-render, restore it
+    var shouldBeOpen = btn.classList.contains('open');
+    if (shouldBeOpen && !sidebar.classList.contains('mob-open')) {
+      sidebar.classList.add('mob-open');
+    }
+  }, 200);
+
+  // Close sidebar on resize to desktop
+  window.addEventListener('resize', function(){
+    if (window.innerWidth > 768) closeMobileSidebar();
+  });
+
+  // Initial setup
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMobileSidebar);
+  } else {
+    setTimeout(setupMobileSidebar, 100);
+  }
+})();
+</script>
+""", unsafe_allow_html=True)
+
+# ===========================================================================
+# SYNAPSE CSS
+# ===========================================================================
+st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
@@ -469,26 +547,107 @@ st.markdown("""
    MOBILE RESPONSIVE — max 768px
    Desktop layout is completely untouched above this block.
    ================================================================ */
+
+/* ── Mobile hamburger button — hidden on desktop ── */
+#mob-sidebar-toggle {
+  display: none;
+}
+@media (max-width: 768px) {
+  #mob-sidebar-toggle {
+    display: flex !important;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 99999;
+    width: 40px;
+    height: 40px;
+    background: rgba(10,0,0,0.92);
+    border: 1px solid rgba(255,32,32,0.35);
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color .18s, box-shadow .18s;
+    box-shadow: 0 0 12px -4px rgba(255,32,32,0.3);
+  }
+  #mob-sidebar-toggle:hover {
+    border-color: rgba(255,32,32,0.7);
+    box-shadow: 0 0 18px -4px rgba(255,32,32,0.5);
+  }
+  #mob-sidebar-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #ff4040;
+    border-radius: 2px;
+    position: relative;
+    transition: all .22s cubic-bezier(0.23,1,0.32,1);
+  }
+  #mob-sidebar-toggle span::before,
+  #mob-sidebar-toggle span::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 2px;
+    background: #ff4040;
+    border-radius: 2px;
+    transition: all .22s cubic-bezier(0.23,1,0.32,1);
+  }
+  #mob-sidebar-toggle span::before { top: -5px; }
+  #mob-sidebar-toggle span::after  { top: 5px; }
+
+  /* open state — X icon */
+  #mob-sidebar-toggle.open span { background: transparent; }
+  #mob-sidebar-toggle.open span::before { transform: rotate(45deg); top: 0; }
+  #mob-sidebar-toggle.open span::after  { transform: rotate(-45deg); top: 0; }
+}
+
 @media (max-width: 768px) {
 
-  /* ── Hide sidebar entirely on mobile — too cramped ── */
+  /* ── Sidebar: hidden by default, slides in when .mob-open ── */
   [data-testid="stSidebar"] {
-    display: none !important;
-    min-width: 0 !important;
-    max-width: 0 !important;
-    width: 0 !important;
-    overflow: hidden !important;
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    width: 260px !important;
+    z-index: 9999 !important;
+    transform: translateX(-100%) !important;
+    transition: transform .28s cubic-bezier(0.23,1,0.32,1) !important;
+    overflow-y: auto !important;
   }
+  [data-testid="stSidebar"].mob-open {
+    transform: translateX(0) !important;
+  }
+
+  /* ── Dim overlay behind sidebar when open ── */
+  #mob-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9998;
+    backdrop-filter: blur(2px);
+  }
+  #mob-overlay.active { display: block; }
 
   /* ── Main content fills full width ── */
   .main .block-container {
     padding: 0 1rem 3rem !important;
     max-width: 100% !important;
+    padding-top: 0.5rem !important;
   }
 
-  /* ── Hero: shrink title, tighten padding ── */
+  /* ── Push hero down so it doesn't hide under the hamburger ── */
   .syn-hero {
     padding: 1.5rem 1rem 1rem !important;
+    padding-top: 3.5rem !important;
   }
   .syn-hero-title {
     font-size: clamp(2rem, 10vw, 3rem) !important;
@@ -597,89 +756,6 @@ st.markdown("""
   }
   .flbl { min-width: 90px !important; }
 }
-
-/* ================================================================
-   MOBILE BOTTOM NAV BAR
-   Only visible on mobile (≤768px). Fixed at bottom of screen.
-   ================================================================ */
-.mob-nav {
-  display: none;
-}
-@media (max-width: 768px) {
-  /* Extra bottom padding so content doesn't hide behind nav bar */
-  .main .block-container {
-    padding-bottom: 80px !important;
-  }
-  .mob-nav {
-    display: flex !important;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 60px;
-    background: rgba(8,0,0,0.97);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255,32,32,0.15);
-    z-index: 9999;
-    align-items: stretch;
-    justify-content: stretch;
-  }
-  .mob-nav-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: rgba(255,255,255,0.35);
-    font-family: 'Inter', sans-serif;
-    font-size: .6rem;
-    font-weight: 600;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    transition: color .15s;
-    text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .mob-nav-btn.active {
-    color: #ff4040;
-  }
-  .mob-nav-btn svg {
-    width: 20px; height: 20px;
-    stroke-width: 1.8;
-  }
-  .mob-nav-divider {
-    width: 1px;
-    background: rgba(255,32,32,0.1);
-    margin: 10px 0;
-    flex-shrink: 0;
-  }
-  /* Example inputs mobile pill row */
-  .mob-examples {
-    display: flex;
-    gap: .4rem;
-    overflow-x: auto;
-    padding: .5rem 0 .3rem;
-    margin-bottom: .6rem;
-    scrollbar-width: none;
-  }
-  .mob-examples::-webkit-scrollbar { display: none; }
-  .mob-ex-pill {
-    flex-shrink: 0;
-    background: rgba(255,32,32,0.06);
-    border: 1px solid rgba(255,32,32,0.2);
-    border-radius: 9999px;
-    padding: .28rem .75rem;
-    font-size: .65rem;
-    font-weight: 600;
-    color: #ff8080;
-    cursor: pointer;
-    white-space: nowrap;
-    -webkit-tap-highlight-color: transparent;
-  }
-}
 </style>""", unsafe_allow_html=True)
 
 # ===========================================================================
@@ -744,106 +820,6 @@ for k, v in [
 ]:
     if k not in st.session_state:
         st.session_state[k] = v
-
-# ===========================================================================
-# MOBILE BOTTOM NAV (only visible on mobile via CSS)
-# Uses query params to trigger page changes without full rerun conflicts
-# ===========================================================================
-_cur_page = st.session_state.page
-_scanner_active = "active" if _cur_page == "Scanner" else ""
-_about_active   = "active" if _cur_page == "About"   else ""
-_eng_active     = "active" if _cur_page == "Engineering" else ""
-
-st.markdown(f"""
-<nav class="mob-nav" id="mob-nav">
-  <button class="mob-nav-btn {_scanner_active}" onclick="mobNav('Scanner')" id="mn-scanner">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/>
-    </svg>
-    Scanner
-  </button>
-  <div class="mob-nav-divider"></div>
-  <button class="mob-nav-btn {_about_active}" onclick="mobNav('About')" id="mn-about">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <circle cx="12" cy="8" r="4"/>
-      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-    </svg>
-    About
-  </button>
-  <div class="mob-nav-divider"></div>
-  <button class="mob-nav-btn {_eng_active}" onclick="mobNav('Engineering')" id="mn-eng">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-    </svg>
-    Engineering
-  </button>
-</nav>
-
-<script>
-function mobNav(page) {{
-  // Set a cookie/localStorage so Streamlit picks it up on next interaction
-  try {{ localStorage.setItem('mob_nav_page', page); }} catch(e) {{}}
-  // Update active state immediately (visual feedback)
-  ['Scanner','About','Engineering'].forEach(function(p) {{
-    var el = document.getElementById('mn-' + p.toLowerCase().replace('engineering','eng'));
-    if (el) el.classList.toggle('active', p === page);
-  }});
-  // Trigger Streamlit rerun by clicking a hidden button
-  var btn = window.parent.document.querySelector('[data-testid="stApp"]');
-  // Find and click the hidden nav trigger button
-  var triggers = window.parent.document.querySelectorAll('button[data-mob-nav]');
-  triggers.forEach(function(t) {{
-    if (t.getAttribute('data-mob-nav') === page) t.click();
-  }});
-}}
-</script>
-""", unsafe_allow_html=True)
-
-# Hidden nav trigger buttons (picked up by the JS above)
-_mob_col1, _mob_col2, _mob_col3 = st.columns(3)
-with _mob_col1:
-    if st.button("Scanner", key="mob_nav_Scanner", help="mobile-nav"):
-        st.session_state.page = "Scanner"
-        st.rerun()
-with _mob_col2:
-    if st.button("About", key="mob_nav_About", help="mobile-nav"):
-        st.session_state.page = "About"
-        st.rerun()
-with _mob_col3:
-    if st.button("Engineering", key="mob_nav_Engineering", help="mobile-nav"):
-        st.session_state.page = "Engineering"
-        st.rerun()
-
-# Hide these helper buttons visually — they're only for JS triggering
-st.markdown("""
-<style>
-button[data-testid="baseButton-secondary"][title="mobile-nav"],
-div[data-testid="column"] button[kind="secondary"] {
-  /* only hide on desktop — on mobile these ARE the nav */
-}
-@media (min-width: 769px) {
-  /* Hide mobile nav trigger buttons on desktop completely */
-  [data-testid="stHorizontalBlock"]:has(button[title="mobile-nav"]) {
-    display: none !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-}
-@media (max-width: 768px) {
-  /* On mobile, hide them too — bottom nav handles navigation */
-  [data-testid="stHorizontalBlock"]:has(button[title="mobile-nav"]) {
-    display: none !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-}
-</style>
-""", unsafe_allow_html=True)
 
 # ===========================================================================
 # SIDEBAR
@@ -1256,65 +1232,6 @@ else:
     Always apply independent judgement.
   </div>
 </div>""", unsafe_allow_html=True)
-
-    # ── Mobile example pills (only visible on mobile via CSS) ─────────────
-    ex_pills_html = '<div class="mob-examples">'
-    for ex_name in EXAMPLES:
-        ex_pills_html += f'<span class="mob-ex-pill" onclick="(function(){{document.querySelector(\'[data-testid=\\\"stApp\\\"]\')}})()">{ex_name}</span>'
-    ex_pills_html += '</div>'
-    # Build individual Streamlit buttons hidden on desktop, shown as pills on mobile
-    st.markdown('<div class="mob-examples" id="mob-ex-row">', unsafe_allow_html=True)
-    mob_ex_cols = st.columns(len(EXAMPLES))
-    for i, ex_name in enumerate(EXAMPLES):
-        with mob_ex_cols[i]:
-            if st.button(ex_name, key=f"mob_ex_{ex_name}"):
-                set_ex(EXAMPLES[ex_name])
-                st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Style the mobile example buttons as pills
-    st.markdown("""
-<style>
-/* On desktop hide the mobile example row entirely */
-@media (min-width: 769px) {
-  #mob-ex-row, [data-testid="stHorizontalBlock"]:has([data-testid="baseButton-secondary"][key^="mob_ex_"]) {
-    display: none !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-}
-/* On mobile style them as scrollable pills */
-@media (max-width: 768px) {
-  [data-testid="stHorizontalBlock"]:has(button[kind="secondary"]) {
-    overflow-x: auto !important;
-    flex-wrap: nowrap !important;
-    gap: .35rem !important;
-    padding: .4rem 0 .3rem !important;
-    scrollbar-width: none !important;
-  }
-  [data-testid="stHorizontalBlock"]:has(button[kind="secondary"])::-webkit-scrollbar {
-    display: none !important;
-  }
-  [data-testid="stHorizontalBlock"] > [data-testid="column"] {
-    flex-shrink: 0 !important;
-    min-width: fit-content !important;
-    width: auto !important;
-  }
-  [data-testid="stHorizontalBlock"] button[kind="secondary"] {
-    background: rgba(255,32,32,0.06) !important;
-    border: 1px solid rgba(255,32,32,0.25) !important;
-    border-radius: 9999px !important;
-    color: #ff8080 !important;
-    font-size: .65rem !important;
-    padding: .28rem .7rem !important;
-    white-space: nowrap !important;
-    width: auto !important;
-  }
-}
-</style>
-""", unsafe_allow_html=True)
 
     # ── Input section ─────────────────────────────────────────────────────
     st.markdown('<div class="isec"><div class="isec-t">Threat Scanner</div>', unsafe_allow_html=True)
