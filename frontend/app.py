@@ -128,6 +128,55 @@ section[data-testid="stSidebar"] > div > div > div > button,
   display:none!important;visibility:hidden!important
 }
 
+/* ── MOBILE — hide sidebar entirely, full-width layout ── */
+@media (max-width: 768px) {
+  [data-testid="stSidebar"],
+  [data-testid="stSidebarCollapseButton"],
+  [data-testid="collapsedControl"] {
+    display:none!important;
+    visibility:hidden!important;
+    width:0!important;
+    min-width:0!important;
+  }
+  .main .block-container {
+    padding:0 1rem 6rem!important;
+    max-width:100%!important;
+    margin-left:0!important;
+  }
+  [data-testid="stAppViewContainer"] > .main {
+    margin-left:0!important;
+    padding-left:0!important;
+  }
+  .syn-hero { padding:1.5rem 1rem 1.2rem!important; }
+  .syn-hero-title { font-size:clamp(2rem,10vw,3rem)!important; }
+  .syn-stat-grid { grid-template-columns:repeat(2,1fr)!important; }
+  .arch-row { grid-template-columns:1fr!important; }
+  .dgrid { grid-template-columns:1fr!important; }
+  /* mobile bottom nav bar */
+  .mob-nav {
+    position:fixed;bottom:0;left:0;right:0;z-index:9999;
+    background:rgba(5,0,0,0.97);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-top:1px solid rgba(255,32,32,0.15);
+    display:flex!important;justify-content:space-around;align-items:center;
+    padding:.6rem 0 .8rem;
+  }
+  .mob-nav-btn {
+    display:flex;flex-direction:column;align-items:center;gap:.2rem;
+    background:none;border:none;cursor:pointer;
+    font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:rgba(255,255,255,0.4);padding:.3rem .8rem;border-radius:8px;
+    transition:color .15s;
+  }
+  .mob-nav-btn.active { color:#ff6060!important; }
+  .mob-nav-icon { font-size:1.1rem;line-height:1; }
+}
+/* hide mob-nav on desktop */
+@media (min-width: 769px) {
+  .mob-nav { display:none!important; }
+  .mob-about { display:none!important; }
+}
+
 /* ── ambient orbs ── */
 .stApp::before{
   content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
@@ -1387,4 +1436,80 @@ else:
     <span class="pgfooter-chip">scikit-learn</span>
     <span class="pgfooter-chip">Explainable ML</span>
   </div>
-</div>""", unsafe_allow_html=True)
+</div>
+
+<!-- ── MOBILE ONLY: About section at bottom ── -->
+<div class="mob-about">
+  <div style="height:1px;background:rgba(255,32,32,0.12);margin:2rem 0 1.5rem"></div>
+  <div style="font-size:.55rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    color:rgba(255,255,255,0.2);margin-bottom:1rem">About the Developer</div>
+
+  <div style="background:rgba(5,5,5,0.85);border:1px solid rgba(255,32,32,0.08);
+    border-radius:16px;padding:1.2rem 1.3rem;margin-bottom:.8rem">
+    <div style="font-family:'Instrument Serif',serif;font-size:1.4rem;letter-spacing:-.02em;
+      background:linear-gradient(135deg,#ff6060,#ffa0a0);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      margin-bottom:.2rem">Rudransh Sharma</div>
+    <div style="font-size:.72rem;color:rgba(255,255,255,0.45);margin-bottom:.8rem">
+      ML Engineer &nbsp;&middot;&nbsp; VIT Chennai &nbsp;&middot;&nbsp; Graduating 2028
+    </div>
+    <p style="font-size:.78rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:.9rem">
+      ML Engineering student with a strong interest in machine learning,
+      cybersecurity, and full-stack development. ThreatLens is built and
+      trained entirely from scratch — zero external APIs, full local inference.
+    </p>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <a style="display:inline-flex;align-items:center;background:rgba(255,255,255,0.04);
+        border:1px solid rgba(255,32,32,0.15);border-radius:8px;padding:.35rem .75rem;
+        font-size:.72rem;color:#ff6060;text-decoration:none;" href="https://github.com/rudransh27sharma" target="_blank">GitHub</a>
+      <a style="display:inline-flex;align-items:center;background:rgba(255,255,255,0.04);
+        border:1px solid rgba(255,32,32,0.15);border-radius:8px;padding:.35rem .75rem;
+        font-size:.72rem;color:#ff6060;text-decoration:none;" href="https://www.linkedin.com/in/rudransh-sharma-/" target="_blank">LinkedIn</a>
+      <a style="display:inline-flex;align-items:center;background:rgba(255,255,255,0.04);
+        border:1px solid rgba(255,32,32,0.15);border-radius:8px;padding:.35rem .75rem;
+        font-size:.72rem;color:#ff6060;text-decoration:none;" href="mailto:contact.rudranshsharma@gmail.com">Email</a>
+    </div>
+  </div>
+
+  <div style="background:rgba(5,5,5,0.85);border:1px solid rgba(255,32,32,0.08);
+    border-radius:16px;padding:1.2rem 1.3rem">
+    <div style="font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+      color:rgba(255,255,255,0.2);margin-bottom:.7rem">About ThreatLens</div>
+    <p style="font-size:.78rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:.7rem">
+      Two Random Forest classifiers — URL model (14 features) and Text model (11 features).
+      Every verdict is traceable. Nothing leaves your device.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:.4rem">
+      <span style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,32,32,0.12);
+        border-radius:9999px;padding:.2rem .6rem;font-size:.65rem;color:rgba(255,255,255,0.35)">scikit-learn</span>
+      <span style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,32,32,0.12);
+        border-radius:9999px;padding:.2rem .6rem;font-size:.65rem;color:rgba(255,255,255,0.35)">FastAPI</span>
+      <span style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,32,32,0.12);
+        border-radius:9999px;padding:.2rem .6rem;font-size:.65rem;color:rgba(255,255,255,0.35)">Streamlit</span>
+      <span style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,32,32,0.12);
+        border-radius:9999px;padding:.2rem .6rem;font-size:.65rem;color:rgba(255,255,255,0.35)">Python 3.11</span>
+    </div>
+  </div>
+  <div style="height:5rem"></div>
+</div>
+
+<!-- ── MOBILE BOTTOM NAV ── -->
+<div class="mob-nav" id="mob-nav">
+  <button class="mob-nav-btn active" id="mob-btn-scanner" onclick="setMobPage('Scanner')">
+    <span class="mob-nav-icon">🔍</span>Scanner
+  </button>
+  <button class="mob-nav-btn" id="mob-btn-engineering" onclick="setMobPage('Engineering')">
+    <span class="mob-nav-icon">⚙️</span>Engineering
+  </button>
+</div>
+
+<script>
+function setMobPage(p) {
+  document.querySelectorAll('.mob-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  var btn = document.getElementById('mob-btn-' + p.toLowerCase());
+  if(btn) btn.classList.add('active');
+  var btns = document.querySelectorAll('[data-testid="stSidebar"] button');
+  btns.forEach(function(b){ if(b.innerText.trim() === p) b.click(); });
+}
+</script>
+""", unsafe_allow_html=True)
